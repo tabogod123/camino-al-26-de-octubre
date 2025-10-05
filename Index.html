@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Camino al 26 de Octubre 💖</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: "Press Start 2P", cursive;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      image-rendering: pixelated;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+</head>
+<body>
+  <script>
+    const config = {
+      type: Phaser.AUTO,
+      width: 480,
+      height: 320,
+      backgroundColor: '#000000',
+      pixelArt: true,
+      scene: { preload, create, update },
+      physics: { default: 'arcade', arcade: { debug: false } }
+    };
+
+    const game = new Phaser.Game(config);
+    let player, cursors, startText, started = false;
+
+    function preload() {
+      // Personaje simple (un cuadrado temporal por ahora)
+      this.graphics = this.add.graphics();
+    }
+
+    function create() {
+      // Texto de inicio
+      startText = this.add.text(240, 160, 'Camino al 26 de Octubre\n\nPresiona ENTER para comenzar', {
+        fontSize: '10px',
+        color: '#ffffff',
+        align: 'center'
+      }).setOrigin(0.5);
+
+      cursors = this.input.keyboard.createCursorKeys();
+
+      // Escucha ENTER para comenzar
+      this.input.keyboard.on('keydown-ENTER', () => {
+        if (!started) {
+          started = true;
+          startText.destroy();
+          startGame.call(this);
+        }
+      });
+    }
+
+    function startGame() {
+      // Crea un cuadrado como jugador (más adelante lo cambiamos por sprite pixel art)
+      player = this.add.rectangle(240, 160, 16, 16, 0xff66cc);
+      this.physics.add.existing(player);
+      player.body.setCollideWorldBounds(true);
+    }
+
+    function update() {
+      if (!started) return;
+      const speed = 100;
+      player.body.setVelocity(0);
+
+      if (cursors.left.isDown) player.body.setVelocityX(-speed);
+      if (cursors.right.isDown) player.body.setVelocityX(speed);
+      if (cursors.up.isDown) player.body.setVelocityY(-speed);
+      if (cursors.down.isDown) player.body.setVelocityY(speed);
+    }
+  </script>
+</body>
+</html>
